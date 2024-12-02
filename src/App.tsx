@@ -1,9 +1,11 @@
+import CargoTable from "./components/CargoTable/CargoTable";
+
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">content</header>
+      <CargoTable />
     </div>
   );
 }
