@@ -97,7 +97,15 @@ const CargoTable = () => {
               cargoList.map((cargo: ICargo) => (
                 <tr key={cargo.id}>
                   <td>{cargo.id}</td>
-                  <td>{cargo.name}</td>
+                  <td
+                    style={{
+                      maxWidth: "300px",
+                      wordWrap: "break-word",
+                      whiteSpace: "normal",
+                    }}
+                  >
+                    {cargo.name}
+                  </td>
                   <td>
                     <select
                       className={`form-select ${getStatusColor(cargo.status)}`}
