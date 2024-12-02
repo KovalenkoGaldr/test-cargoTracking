@@ -1,13 +1,13 @@
 import { ICargo } from "./types";
 
-export const cargoList: ICargo[] = [
+export const initCargoList: ICargo[] = [
   {
     id: "CARGO001",
     name: "Строительные материалы",
     status: "В пути",
     origin: "Москва",
     destination: "Казань",
-    departureDate: "2024-11-24",
+    departureDate: "2024-12-24",
   },
   {
     id: "CARGO002",

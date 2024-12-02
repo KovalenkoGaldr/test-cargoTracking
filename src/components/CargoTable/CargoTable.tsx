@@ -1,14 +1,63 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { cargoList } from "../../constants";
-import { ICargo } from "../../types";
+import { initCargoList } from "../../constants";
+import { ICargo, TStatuses } from "../../types";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CargoTable = () => {
+  const [cargoList, setCargoList] = useState<ICargo[]>(initCargoList);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const getStatusClass = (status: TStatuses) => {
+    switch (status) {
+      case "Ожидает отправки":
+        return "text-warning";
+      case "В пути":
+        return "text-primary";
+      case "Доставлен":
+        return "text-success";
+      default:
+        return "";
+    }
+  };
+  const handleStatusChange = (id: string, newStatus: TStatuses) => {
+    const updatedCargoList = cargoList.map((cargo) => {
+      if (cargo.id === id) {
+        if (newStatus === "Доставлен") {
+          const departureDate = new Date(cargo.departureDate);
+          const now = new Date();
+
+          if (departureDate > now) {
+            setErrorMessage(
+              `Нельзя изменить статус груза "${cargo.name}" на "Доставлен", так как дата отправления 
+              ${cargo.departureDate} находится в будущем.`
+            );
+            return cargo;
+          }
+        }
+
+        setErrorMessage(null);
+        return { ...cargo, status: newStatus };
+      }
+
+      setErrorMessage(null);
+      return cargo;
+    });
+
+    setCargoList(updatedCargoList);
+  };
+
   return (
     <div className="container mt-4">
       <h1>Список грузов</h1>
+
+      {errorMessage && (
+        <div className="alert alert-danger" role="alert">
+          {errorMessage}
+        </div>
+      )}
+
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle">
           <thead className="table-light">
@@ -22,16 +71,39 @@ const CargoTable = () => {
             </tr>
           </thead>
           <tbody>
-            {cargoList.map((cargo: ICargo) => (
-              <tr key={cargo.id}>
-                <td>{cargo.id}</td>
-                <td>{cargo.name}</td>
-                <td>{cargo.status}</td>
-                <td>{cargo.origin}</td>
-                <td>{cargo.destination}</td>
-                <td>{cargo.departureDate}</td>
+            {cargoList.length ? (
+              cargoList.map((cargo: ICargo) => (
+                <tr key={cargo.id}>
+                  <td>{cargo.id}</td>
+                  <td>{cargo.name}</td>
+                  <td>
+                    <select
+                      className={`form-select ${getStatusClass(cargo.status)}`}
+                      value={cargo.status}
+                      onChange={(e) =>
+                        handleStatusChange(
+                          cargo.id,
+                          e.target.value as TStatuses
+                        )
+                      }
+                    >
+                      <option value="Ожидает отправки">Ожидает отправки</option>
+                      <option value="В пути">В пути</option>
+                      <option value="Доставлен">Доставлен</option>
+                    </select>
+                  </td>
+                  <td>{cargo.origin}</td>
+                  <td>{cargo.destination}</td>
+                  <td>{cargo.departureDate}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="text-center">
+                  Данных нет
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
