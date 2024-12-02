@@ -19,8 +19,13 @@ const CargoTable = () => {
     localStorage.setItem("cargoList", JSON.stringify(cargoList));
   }, [cargoList]);
 
+  const generateCargoId = (): string => {
+    const nextId = cargoList.length + 1;
+    return `CARGO${nextId.toString().padStart(3, "0")}`;
+  };
   const handleAddCargo = (newCargo: ICargo) => {
-    setCargoList([...cargoList, newCargo]);
+    const cargoWithId = { ...newCargo, id: generateCargoId() };
+    setCargoList([...cargoList, cargoWithId]);
     setShowForm(false);
   };
 

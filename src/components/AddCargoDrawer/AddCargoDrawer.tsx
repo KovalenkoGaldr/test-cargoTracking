@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 
 import { cities } from "../../constants";
-import { ICargo } from "../../types";
+import { ICargo, TStatuses } from "../../types";
+import { getStatusColor } from "../../utils/getStatusColor";
 
 interface IAddCargoDrawerProps {
   onAddCargo: (newCargo: ICargo) => void;
@@ -80,6 +81,24 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
                 setNewCargo({ ...newCargo, name: e.target.value })
               }
             />
+          </div>
+
+          <div className="form-group mb-3">
+            <label className="mb-2">Статус</label>
+            <select
+              className={`form-select ${getStatusColor(newCargo.status)}`}
+              value={newCargo.status}
+              onChange={(e) =>
+                setNewCargo({
+                  ...newCargo,
+                  status: e.target.value as TStatuses,
+                })
+              }
+            >
+              <option value="Ожидает отправки">Ожидает отправки</option>
+              <option value="В пути">В пути</option>
+              <option value="Доставлен">Доставлен</option>
+            </select>
           </div>
 
           <div className="form-group mb-3">
