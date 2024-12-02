@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { cities } from "../../constants";
 import { ICargo } from "../../types";
 
-interface IAddCargoForm {
+interface IAddCargoDrawerProps {
   onAddCargo: (newCargo: ICargo) => void;
   onCancel: () => void;
 }
 
-const AddCargoForm = (props: IAddCargoForm) => {
+const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
   const { onAddCargo, onCancel } = props;
   const [newCargo, setNewCargo] = useState<ICargo>({
     id: "",
@@ -128,4 +128,5 @@ const AddCargoForm = (props: IAddCargoForm) => {
     </>
   );
 };
-export default AddCargoForm;
+
+export default AddCargoDrawer;

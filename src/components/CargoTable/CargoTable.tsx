@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import { initCargoList } from "../../constants";
 import Modal from "../Modal/Modal";
+import AddCargoDrawer from "../AddCargoDrawer/AddCargoDrawer";
 import { ICargo, TStatuses } from "../../types";
-import AddCargoForm from "../AddCargoForm/AddCargoForm";
+import { getStatusColor } from "../../utils/getStatusColor";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -16,19 +17,6 @@ const CargoTable = () => {
   const handleAddCargo = (newCargo: ICargo) => {
     setCargoList([...cargoList, newCargo]);
     setShowForm(false);
-  };
-
-  const getStatusClass = (status: TStatuses) => {
-    switch (status) {
-      case "Ожидает отправки":
-        return "text-warning";
-      case "В пути":
-        return "text-primary";
-      case "Доставлен":
-        return "text-success";
-      default:
-        return "";
-    }
   };
 
   const handleStatusChange = (id: string, newStatus: TStatuses) => {
@@ -74,7 +62,7 @@ const CargoTable = () => {
       </div>
 
       {showForm && (
-        <AddCargoForm
+        <AddCargoDrawer
           onAddCargo={handleAddCargo}
           onCancel={() => setShowForm(false)}
         />
@@ -102,7 +90,7 @@ const CargoTable = () => {
                   <td>{cargo.name}</td>
                   <td>
                     <select
-                      className={`form-select ${getStatusClass(cargo.status)}`}
+                      className={`form-select ${getStatusColor(cargo.status)}`}
                       value={cargo.status}
                       onChange={(e) =>
                         handleStatusChange(
