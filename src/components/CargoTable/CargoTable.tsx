@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { initCargoList } from "../../constants";
-import { ICargo, TStatuses } from "../../types";
 import Modal from "../Modal/Modal";
+import { ICargo, TStatuses } from "../../types";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CargoTable = () => {
   const [cargoList, setCargoList] = useState<ICargo[]>(initCargoList);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (errorMessage) {
-      console.log("Ошибка обновилась:", errorMessage);
-    }
-  }, [errorMessage]);
 
   const getStatusClass = (status: TStatuses) => {
     switch (status) {
@@ -58,7 +52,6 @@ const CargoTable = () => {
     setErrorMessage(null);
   };
 
-  console.log(errorMessage);
   return (
     <div className="container mt-4">
       <h1>Список грузов</h1>
