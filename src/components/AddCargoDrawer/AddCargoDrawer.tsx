@@ -19,6 +19,16 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
     departureDate: "",
   });
 
+  const minDate = "2020-01-01";
+  const maxDate = "2030-01-01";
+  const disabledSave =
+    !newCargo.name ||
+    !newCargo.origin ||
+    !newCargo.destination ||
+    !newCargo.departureDate ||
+    newCargo.departureDate < minDate ||
+    newCargo.departureDate > maxDate;
+
   const handleAddCargo = () => {
     const newCargoWithId = { ...newCargo, id: "id" };
     onAddCargo(newCargoWithId);
@@ -47,7 +57,7 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
 
         <div className="modal-body">
           <div className="form-group mb-3">
-            <label>Название</label>
+            <label className="mb-2">Название</label>
             <input
               type="text"
               className="form-control"
@@ -59,7 +69,7 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
           </div>
 
           <div className="form-group mb-3">
-            <label>Откуда</label>
+            <label className="mb-2">Откуда</label>
             <select
               className="form-select"
               value={newCargo.origin}
@@ -77,7 +87,7 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
           </div>
 
           <div className="form-group mb-3">
-            <label>Куда</label>
+            <label className="mb-2">Куда</label>
             <select
               className="form-select"
               value={newCargo.destination}
@@ -95,11 +105,13 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
           </div>
 
           <div className="form-group mb-3">
-            <label>Дата отправления</label>
+            <label className="mb-2 text-left">Дата отправления</label>
             <input
               type="date"
               className="form-control"
               value={newCargo.departureDate}
+              min="2023-01-01"
+              max={new Date().toISOString().split("T")[0]}
               onChange={(e) =>
                 setNewCargo({ ...newCargo, departureDate: e.target.value })
               }
@@ -120,6 +132,7 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
             type="button"
             className="btn btn-primary"
             onClick={handleAddCargo}
+            disabled={disabledSave}
           >
             Сохранить
           </button>

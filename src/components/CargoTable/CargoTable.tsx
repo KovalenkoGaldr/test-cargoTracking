@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { initCargoList } from "../../constants";
 import Modal from "../Modal/Modal";
 import AddCargoDrawer from "../AddCargoDrawer/AddCargoDrawer";
 import { ICargo, TStatuses } from "../../types";
@@ -9,10 +8,16 @@ import { getStatusColor } from "../../utils/getStatusColor";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CargoTable = () => {
-  const [cargoList, setCargoList] = useState<ICargo[]>(initCargoList);
+  const [cargoList, setCargoList] = useState<ICargo[]>(() =>
+    JSON.parse(localStorage.getItem("cargoList") || "[]")
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("cargoList", JSON.stringify(cargoList));
+  }, [cargoList]);
 
   const handleAddCargo = (newCargo: ICargo) => {
     setCargoList([...cargoList, newCargo]);
