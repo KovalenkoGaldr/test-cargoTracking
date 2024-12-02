@@ -19,8 +19,10 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
     departureDate: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const minDate = "2020-01-01";
-  const maxDate = "2030-01-01";
+  const maxDate = "2030-12-31";
   const disabledSave =
     !newCargo.name ||
     !newCargo.origin ||
@@ -28,6 +30,18 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
     !newCargo.departureDate ||
     newCargo.departureDate < minDate ||
     newCargo.departureDate > maxDate;
+
+  const handleDateChange = (value: string) => {
+    console.log("change");
+    setNewCargo({ ...newCargo, departureDate: value });
+    if (value < minDate) {
+      setErrorMessage(`Дата не может быть раньше ${minDate}`);
+    } else if (value > maxDate) {
+      setErrorMessage(`Дата не может быть позже ${maxDate}`);
+    } else {
+      setErrorMessage(null);
+    }
+  };
 
   const handleAddCargo = () => {
     const newCargoWithId = { ...newCargo, id: "id" };
@@ -110,12 +124,13 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
               type="date"
               className="form-control"
               value={newCargo.departureDate}
-              min="2023-01-01"
-              max={new Date().toISOString().split("T")[0]}
-              onChange={(e) =>
-                setNewCargo({ ...newCargo, departureDate: e.target.value })
-              }
+              min={minDate}
+              max={maxDate}
+              onChange={(e) => handleDateChange(e.target.value)}
             />
+            {errorMessage && (
+              <small className="text-danger">{errorMessage}</small>
+            )}
           </div>
         </div>
 
