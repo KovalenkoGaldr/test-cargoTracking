@@ -2,12 +2,19 @@ import React, { useEffect, useState } from "react";
 
 import { initCargoList } from "../../constants";
 import { ICargo, TStatuses } from "../../types";
+import Modal from "../Modal/Modal";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CargoTable = () => {
   const [cargoList, setCargoList] = useState<ICargo[]>(initCargoList);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (errorMessage) {
+      console.log("Ошибка обновилась:", errorMessage);
+    }
+  }, [errorMessage]);
 
   const getStatusClass = (status: TStatuses) => {
     switch (status) {
@@ -21,6 +28,7 @@ const CargoTable = () => {
         return "";
     }
   };
+
   const handleStatusChange = (id: string, newStatus: TStatuses) => {
     const updatedCargoList = cargoList.map((cargo) => {
       if (cargo.id === id) {
@@ -30,33 +38,32 @@ const CargoTable = () => {
 
           if (departureDate > now) {
             setErrorMessage(
-              `Нельзя изменить статус груза "${cargo.name}" на "Доставлен", так как дата отправления 
-              ${cargo.departureDate} находится в будущем.`
+              `Статус груза "${cargo.name}" на "Доставлен" не был изменен, так как дата отправления ${cargo.departureDate} еще не наступила`
             );
+
             return cargo;
           }
         }
 
-        setErrorMessage(null);
         return { ...cargo, status: newStatus };
       }
 
-      setErrorMessage(null);
       return cargo;
     });
 
     setCargoList(updatedCargoList);
   };
 
+  const closeModal = () => {
+    setErrorMessage(null);
+  };
+
+  console.log(errorMessage);
   return (
     <div className="container mt-4">
       <h1>Список грузов</h1>
 
-      {errorMessage && (
-        <div className="alert alert-danger" role="alert">
-          {errorMessage}
-        </div>
-      )}
+      {errorMessage && <Modal text={errorMessage} closeModal={closeModal} />}
 
       <div className="table-responsive">
         <table className="table table-bordered table-hover align-middle">
