@@ -24,6 +24,7 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
 
   const minDate = "2020-01-01";
   const maxDate = "2030-12-31";
+
   const disabledSave =
     !newCargo.name ||
     !newCargo.origin ||
@@ -33,8 +34,8 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
     newCargo.departureDate > maxDate;
 
   const handleDateChange = (value: string) => {
-    console.log("change");
     setNewCargo({ ...newCargo, departureDate: value });
+
     if (value < minDate) {
       setErrorMessage(`Дата не может быть раньше ${minDate}`);
     } else if (value > maxDate) {
@@ -46,7 +47,10 @@ const AddCargoDrawer = (props: IAddCargoDrawerProps) => {
 
   const handleAddCargo = () => {
     const newCargoWithId = { ...newCargo, id: "id" };
+    console.log(newCargoWithId);
+
     onAddCargo(newCargoWithId);
+    console.log(1);
   };
 
   return (
